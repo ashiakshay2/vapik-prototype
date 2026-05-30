@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VAPIK — Prakriti Assessment</title>
+<style>
+:root{
+  --vata:#4f7ee8;
+  --pitta:#ef5b68;
+  --kapha:#3fa66b;
+  --ink:#172033;
+  --muted:#667085;
+  --bg:#f7f9fc;
+  --card:#ffffff;
+  --line:#e4e7ec;
+  --soft:#f1f5f9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+.app{
+  max-width:720px;
+  margin:0 auto;
+  min-height:100vh;
+  background:var(--bg);
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.logo{
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+.logo span{color:var(--pitta)}
+.sub{
+  font-size:12px;
+  color:var(--muted);
+}
+main{
+  padding:18px 16px 92px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:14px;
+  box-shadow:0 1px 3px rgba(16,24,40,.04);
+}
+h1{
+  font-size:24px;
+  margin:0 0 8px;
+}
+h2{
+  font-size:18px;
+  margin:0 0 10px;
+}
+h3{
+  font-size:15px;
+  margin:0 0 8px;
+}
+p{
+  color:var(--muted);
+  line-height:1.5;
+  margin:8px 0;
+}
+.btn{
+  width:100%;
+  border:0;
+  background:var(--ink);
+  color:#fff;
+  padding:14px 16px;
+  border-radius:13px;
+  font-size:15px;
+  font-weight:750;
+  cursor:pointer;
+  margin-top:10px;
+}
+.btn.secondary{
+  background:#fff;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+.btn.small{
+  width:auto;
+  padding:9px 12px;
+  font-size:13px;
+  margin:0;
+}
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+.grid{
+  display:grid;
+  gap:12px;
+}
+.two{
+  grid-template-columns:1fr 1fr;
+}
+@media(max-width:560px){
+  .two{grid-template-columns:1fr}
+}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+input,select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  font-size:15px;
+  background:#fff;
+}
+.notice{
+  background:#eef6ff;
+  border:1px solid #cfe5ff;
+  padding:12px;
+  border-radius:14px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.checkbox{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:12px;
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:14px;
+  margin-top:12px;
+}
+.checkbox input{
+  width:auto;
+  margin-top:4px;
+}
+.bullet{
+  display:flex;
+  gap:10px;
+  margin:10px 0;
+}
+.bullet .icon{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  background:var(--soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+}
+.sample{
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.sample:last-child{border-bottom:0}
+.sample b{
+  color:var(--ink);
+}
+.progress{
+  height:9px;
+  background:#eef2f7;
+  border-radius:999px;
+  overflow:hidden;
+  margin:6px 0 14px;
+}
+.progress i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--vata),var(--pitta),var(--kapha));
+  transition:.25s;
+}
+.q-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.q-cat{
+  font-size:11px;
+  letter-spacing:.08em;
+  font-weight:900;
+  text-transform:uppercase;
+  color:var(--pitta);
+}
+.choice{
+  border:2px solid var(--line);
+  border-radius:14px;
+  padding:13px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  cursor:pointer;
+  margin:8px 0;
+  transition:.15s;
+}
+.choice:hover{
+  border-color:#cbd5e1;
+  background:#fbfdff;
+}
+.choice.selected{
+  border-color:var(--ink);
+  background:#f8fafc;
+}
+.badge{
+  min-width:28px;
+  height:25px;
+  padding:0 8px;
+  border-radius:999px;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:900;
+}
+.badge.v{background:var(--vata)}
+.badge.p{background:var(--pitta)}
+.badge.k{background:var(--kapha)}
+.navrow{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.navrow .btn{margin-top:0}
+.barwrap{margin:12px 0}
+.barlabel{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+.bar{
+  height:14px;
+  background:#eef2f7;
+  border-radius:999px;
+  overflow:hidden;
+}
+.bar i{
+  display:block;
+  height:100%;
+  border-radius:999px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 16px;
+  border-radius:999px;
+  background:var(--ink);
+  color:#fff;
+  font-weight:900;
+}
+.tip{
+  display:flex;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.tip:last-child{border-bottom:0}
+.tip .num{
+  width:26px;
+  height:26px;
+  border-radius:999px;
+  background:var(--kapha);
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+  font-weight:900;
+  flex:none;
+}
+.person{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+.person:last-child{border-bottom:0}
+.avatar{
+  width:46px;
+  height:46px;
+  border-radius:999px;
+  background:#eef2f7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  flex:none;
+}
+.verified{
+  color:var(--kapha);
+  font-size:12px;
+  font-weight:900;
+}
+.pending{
+  color:#b54708;
+  font-size:12px;
+  font-weight:900;
+}
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+@media(max-width:560px){
+  .kpis{grid-template-columns:1fr 1fr}
+}
+.kpi{
+  background:#f8fafc;
+  border:1px solid var(--line);
+  padding:12px;
+  border-radius:14px;
+}
+.kpi .num{
+  font-size:24px;
+  font-weight:950;
+}
+.kpi .txt{
+  color:var(--muted);
+  font-size:12px;
+}
+.code{
+  background:#0f172a;
+  color:#a7f3d0;
+  padding:13px;
+  border-radius:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:12px;
+  overflow:auto;
+  white-space:pre;
+}
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+.table th,.table td{
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  padding:9px 4px;
+}
+.table th{
+  color:var(--muted);
+  font-size:12px;
+}
+.tabs{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:720px;
+  background:#fff;
+  border-top:1px solid var(--line);
+  display:flex;
+  z-index:20;
+}
+.tabs button{
+  flex:1;
+  border:0;
+  background:#fff;
+  color:var(--muted);
+  padding:10px 4px;
+  font-size:11px;
+  cursor:pointer;
+}
+.tabs button.active{
+  color:var(--pitta);
+  font-weight:900;
+}
+.statusline{
+  color:var(--muted);
+  font-size:12px;
+}
+.success{
+  color:var(--kapha);
+  font-weight:800;
+}
+.warn{
+  color:#b54708;
+  font-weight:800;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="logo">VA<span>P</span>IK</div>
+      <div class="sub">Validated Prakriti Assessment</div>
+    </div>
+    <div class="sub" id="headerStatus"></div>
+  </header>
+
+  <main id="root"></main>
+
+  <nav class="tabs">
+    <button data-route="welcome" class="active">Home</button>
+    <button data-route="demographics">Profile</button>
+    <button data-route="quiz">Assess</button>
+    <button data-route="practitioners">Doctors</button>
+    <button data-route="admin">Admin</button>
+    <button data-route="api">API</button>
+  </nav>
+</div>
+
+<script>
+/* ---------------- Utilities ---------------- */
+const STORE = "vapik_demo_v2";
+const ASSESSMENTS_STORE = "vapik_assessments_v2";
+
+const uuid = () =>
+  (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : "id-" + Math.random().toString(36).slice(2) + Date.now();
+
+const safe = (s="") => String(s)
+  .replaceAll("&","&amp;")
+  .replaceAll("<","&lt;")
+  .replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;")
+  .replaceAll("'","&#039;");
+
+function defaultState(){
+  return {
+    userId: uuid(),
+    consent: null,
+    demo: {
+      name:"",
+      age:"",
+      sex:"",
+      location:"",
+      email:""
+    },
+    answers: Array(60).fill(null),
+    idx: 0,
+    assessment: null
+  };
+}
+
+let S = JSON.parse(localStorage.getItem(STORE) || "null") || defaultState();
+
+function save(){
+  localStorage.setItem(STORE, JSON.stringify(S));
+}
+
+function upsertAssessment(a){
+  const list = JSON.parse(localStorage.getItem(ASSESSMENTS_STORE) || "[]");
+  const i = list.findIndex(x => x.assessmentId === a.assessmentId);
+  if(i >= 0) list[i] = a;
+  else list.push(a);
+  localStorage.setItem(ASSESSMENTS_STORE, JSON.stringify(list));
+}
+
+function demoComplete(){
+  const d = S.demo;
+  return d.name && d.age && d.sex && d.location && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email);
+}
+
+function answeredCount(){
+  return S.answers.filter(a => a !== null).length;
+}
+
+/* ---------------- VAPIK Questionnaire ---------------- */
+/* Option index: 0=Vata, 1=Pitta, 2=Kapha */
+const CATS = {
+  1:"Physical Frame & Build",
+  6:"Skin Characteristics",
+  11:"Hair Characteristics",
+  16:"Eyes & Vision",
+  21:"Weight & Metabolism",
+  26:"Temperature & Comfort",
+  31:"Sleep Patterns",
+  36:"Mental Characteristics",
+  41:"Emotional Tendencies",
+  46:"Activity & Energy",
+  51:"Food & Eating Habits",
+  56:"Financial & Work Habits"
+};
+
+const Q = [
+["My body frame is…","Thin, light","Medium, athletic","Large, solid"],
+["My joints are…","Prominent, crackling","Medium, flexible","Large, not too bony"],
+["My muscles are…","Small, under-developed","Medium, toned","Large, well-developed"],
+["My shoulders are…","Narrow, uneven","Medium, proportioned","Broad, even"],
+["My hip structure is…","Narrow, bony","Medium","Broad, well-padded"],
+
+["My skin is usually…","Dry, rough","Warm, prone to rashes","Smooth, moist"],
+["My skin tone is…","Dark, uneven","Reddish, flushed","Fair, even"],
+["In sunlight, my skin…","Tans easily","Burns easily","Tans gradually"],
+["My skin’s moisture level is…","Dry, needs lotion","Oily","Naturally moist"],
+["My skin problems tend to be…","Dryness, scaling","Inflammation, acne, oiliness","Oiliness, fungal"],
+
+["My hair texture is…","Dry, coarse, curly","Fine, straight","Thick, wavy"],
+["My hair tends to be…","Brittle, splits easily","Early graying","Oily, strong"],
+["My scalp is…","Dry, flaky","Normal to oily","Oily"],
+["My hair growth is…","Sparse","Moderate","Abundant"],
+["My facial/body hair is…","Minimal","Moderate","Thick"],
+
+["My eyes are…","Small, active, moves a lot","Medium, sharp","Large, attractive, calm"],
+["My eye shape is…","Irregular, small","Angular, medium","Round, large"],
+["The whites of my eyes are…","Brownish, dull","Reddish, yellow","Clear, white"],
+["My eyelashes are…","Thin, scanty","Moderate","Thick, full"],
+["My vision tends to be…","Variable, strains easily","Sharp, sensitive to sun","Strong, stable"],
+
+["My weight is…","Hard to gain","Fluctuates easily","Hard to lose"],
+["When I gain weight, it shows in…","Hips and thighs","Evenly distributed","Face and belly"],
+["My metabolism is…","Variable, irregular","Strong, efficient","Slow, steady"],
+["My appetite is…","Variable, irregular","Strong, sharp","Steady, can skip meals"],
+["My digestion is…","Irregular, bloating","Quick, acid reflux","Slow, bordering lack of appetite"],
+
+["I generally feel…","Cold easily","Hot easily","Neither extreme"],
+["My hands and feet are…","Usually cold","Usually warm","Usually cool"],
+["I prefer drinks that are…","Hot","Cold","Room temperature"],
+["My ideal weather is…","Warm, humid","Cool, dry","Moderate"],
+["My body temperature is…","Below normal","Above normal","Normal"],
+
+["My sleep is…","Light, disturbed","Moderate","Deep, long"],
+["I usually sleep for…","Less than 6 hours","6–7 hours","More than 8 hours"],
+["Falling asleep is…","Difficult","Easy but light","Easy and deep"],
+["My dreams are usually…","Flying, moving","Intense, fiery","Romantic, watery"],
+["After sleeping I feel…","Still tired","Refreshed","Heavy, groggy"],
+
+["My mind is…","Active, racing","Sharp, focused","Calm, steady"],
+["I learn new things…","Quickly but forget","Moderately","Slowly but remember"],
+["My speech is…","Fast, scattered","Precise, sharp","Slow, methodical"],
+["I make decisions…","Quickly, changeably","Decisively","Carefully, slowly"],
+["My memory is…","Short-term strong","Medium-term strong","Long-term strong"],
+
+["When stressed, I become…","Anxious, worried","Irritated, angry","Withdrawn, stubborn"],
+["My emotional state is…","Changes quickly","Intense but steady","Stable, slow to change"],
+["In relationships, I am…","Social, changeable","Passionate, intense","Loyal, steady"],
+["I tend to be…","Creative, enthusiastic","Purposeful, focused","Calm, nurturing"],
+["Under pressure, I…","Get overwhelmed","Get aggressive","Withdraw"],
+
+["My energy levels are…","Variable, sporadic","Strong but depleting","Steady, sustained"],
+["I prefer exercises that are…","Light, varied","Intense, challenging","Steady, moderate"],
+["My walking pace is…","Fast, irregular","Purposeful, medium","Slow, steady"],
+["My activities are…","Many but incomplete","Goal-oriented","Few but thorough"],
+["After exercise I feel…","Light, energized","Hot, competitive","Heavy, steady"],
+
+["My eating speed is…","Fast, irregular","Medium, regular","Slow, steady"],
+["I prefer foods that are…","Warm, cooked","Hot, spicy","Cool, sweet"],
+["My thirst level is…","Variable","Excessive","Low"],
+["My food portions are…","Variable, small","Medium, regular","Large, steady"],
+["I can…","Skip meals easily","Never skip meals","Often skip meals"],
+
+["With money, I tend to…","Spend quickly","Save for goals","Save steadily"],
+["At work, I am…","Multi-tasking","Focused, intense","Methodical"],
+["My work style is…","Creative, varied","Organized, efficient","Steady, thorough"],
+["I handle deadlines by…","Working last minute","Planning ahead","Working steadily"],
+["My career choices are…","Various, changing","Achievement-focused","Stable, consistent"]
+];
+
+const TIPS = {
+  Vata: [
+    "Keep a warm, regular routine with consistent meal and sleep times.",
+    "Favor warm, cooked, grounding foods; reduce cold, raw, and irregular eating.",
+    "Use gentle grounding practices such as slow yoga, oil massage, and breathwork."
+  ],
+  Pitta: [
+    "Avoid overheating with cooling foods, shade, hydration, and midday breaks.",
+    "Schedule downtime to prevent burnout, irritability, and over-intensity.",
+    "Reduce very spicy, fried, and fermented foods; favor cooling, bitter, and sweet tastes."
+  ],
+  Kapha: [
+    "Move daily with brisk walking, strength training, or energizing exercise.",
+    "Favor light, warm, spiced foods; reduce heavy dairy, excess sugar, and overeating.",
+    "Add stimulation and variety to routines to reduce heaviness and stagnation."
+  ]
+};
+
+const PRACTITIONERS = [
+  {
+    name:"Dr. Anaya Rao",
+    clinic:"Vaidya Wellness Clinic",
+    location:"Bengaluru, India",
+    credential:"BAMS · 12 years",
+    email:"anaya.rao@example.com",
+    verified:true
+  },
+  {
+    name:"Dr. Kabir Menon",
+    clinic:"Sattva Ayur Clinic",
+    location:"Pune, India",
+    credential:"BAMS, MD Ayurveda · 9 years",
+    email:"kabir.menon@example.com",
+    verified:true
+  },
+  {
+    name:"Dr. Leela Iyer",
+    clinic:"Prakriti Health Centre",
+    location:"Chennai, India",
+    credential:"BAMS · 15 years",
+    email:"leela.iyer@example.com",
+    verified:true
+  }
+];
+
+/* ---------------- Scoring ---------------- */
+function score(){
+  let v=0,p=0,k=0;
+  S.answers.forEach(a => {
+    if(a === 0) v++;
+    if(a === 1) p++;
+    if(a === 2) k++;
+  });
+
+  const pct = n => Number(((n / 60) * 100).toFixed(1));
+  const rows = [
+    {key:"Vata", count:v, percent:pct(v)},
+    {key:"Pitta", count:p, percent:pct(p)},
+    {key:"Kapha", count:k, percent:pct(k)}
+  ].sort((a,b) => b.count - a.count);
+
+  const top = rows[0];
+  const second = rows[1];
+
+  let dominant;
+  if(top.percent >= 75){
+    dominant = top.key;
+  }else{
+    dominant = `${top.key}-${second.key}`;
+  }
+
+  const rawConfidence = 0.5 + ((top.count - second.count) / 60) * 1.2;
+  const confidence = Math.max(0.5, Math.min(0.99, Number(rawConfidence.toFixed(2))));
+
+  return {
+    counts:{vata:v,pitta:p,kapha:k},
+    percents:{vata:pct(v),pitta:pct(p),kapha:pct(k)},
+    dominant,
+    confidence,
+    topDosha: top.key
+  };
+}
+
+function buildAssessment(){
+  const r = score();
+  const assessment = {
+    userId: S.userId,
+    name: S.demo.name,
+    age: Number(S.demo.age),
+    sex: S.demo.sex,
+    location: S.demo.location,
+    email: S.demo.email,
+    assessmentId: S.assessment?.assessmentId || uuid(),
+    answers: S.answers.map((value,i) => ({
+      qId: `q${i+1}`,
+      value: String(value)
+    })),
+    scores: {
+      vata: r.percents.vata,
+      pitta: r.percents.pitta,
+      kapha: r.percents.kapha
+    },
+    scoreCounts: r.counts,
+    dominant: r.dominant,
+    confidence: r.confidence,
+    consentId: S.consent?.consentId,
+    timestamp: new Date().toISOString(),
+    emailDelivery: {
+      status: "sent-demo",
+      to: S.demo.email,
+      provider: "mock-email",
+      sentAt: new Date().toISOString()
+    }
+  };
+
+  S.assessment = assessment;
+  save();
+  upsertAssessment(assessment);
+  return assessment;
+}
+
+/* ---------------- Views ---------------- */
+const root = document.getElementById("root");
+const headerStatus = document.getElementById("headerStatus");
+let current = "welcome";
+
+function categoryForQuestion(num){
+  const keys = Object.keys(CATS).map(Number).filter(n => n <= num);
+  return CATS[Math.max(...keys)];
+}
+
+function viewWelcome(){
+  const done = answeredCount();
+  const canContinue = !!S.consent;
+  const sampleIdx = [0,5,20,30,35,40];
+
+  return `
+    <section class="card">
+      <h1>Discover your Ayurvedic constitution</h1>
+      <p><b>VAPIK</b> is a clinical-friendly Prakriti assessment that explains your Vata, Pitta, and Kapha profile using a 60-question questionnaire.</p>
+
+      <div class="bullet">
+        <div class="icon">🧭</div>
+        <p><b>60 guided questions</b><br/>Complete in about 5 minutes with auto-save and resume.</p>
+      </div>
+      <div class="bullet">
+        <div class="icon">🔒</div>
+        <p><b>Consent-first</b><br/>Your responses are processed only after explicit consent.</p>
+      </div>
+      <div class="bullet">
+        <div class="icon">📄</div>
+        <p><b>Clear results</b><br/>See dosha scores, dominant type, confidence, PDF, and email summary.</p>
+      </div>
+
+      <div class="notice">
+        <div>🔐</div>
+        <p><b>Privacy summary:</b> We use your consented responses only to generate and share your assessment result, storing minimal data for this demo.</p>
+      </div>
+
+      <div class="checkbox">
+        <input id="consentBox" type="checkbox" ${S.consent ? "checked" : ""}/>
+        <label for="consentBox">
+          I consent to VAPIK collecting my demographics, contact details, and questionnaire answers to generate my Prakriti result and email my summary. I understand this is wellness guidance, not medical diagnosis.
+        </label>
+      </div>
+
+      <button class="btn" id="homeCta" ${canContinue ? "" : "disabled"}>
+        ${demoComplete() ? (done > 0 ? "Resume Assessment" : "Start Assessment") : "Continue to Profile"}
+      </button>
+
+      ${S.consent ? `<p class="statusline success">Consent record stored: ${safe(S.consent.consentId)}</p>` : ""}
+    </section>
+
+    <section class="card">
+      <h2>Six sample VAPIK questions</h2>
+      ${sampleIdx.map(i => `
+        <div class="sample">
+          <b>Q${i+1}. ${safe(Q[i][0])}</b>
+          <p>Vata: ${safe(Q[i][1])} · Pitta: ${safe(Q[i][2])} · Kapha: ${safe(Q[i][3])}</p>
+        </div>
+      `).join("")}
+    </section>
+  `;
+}
+
+function viewDemographics(){
+  if(!S.consent){
+    return `
+      <section class="card">
+        <h2>Consent required</h2>
+        <p>Please provide explicit consent before entering demographic and contact details.</p>
+        <button class="btn" data-route="welcome">Go to consent</button>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="card">
+      <h1>Demographics & Contact</h1>
+      <p>These fields are mandatory for the demo result summary and email delivery.</p>
+
+      <form id="demoForm" class="grid">
+        <div>
+          <label>Name</label>
+          <input name="name" required value="${safe(S.demo.name)}" placeholder="Full name"/>
+        </div>
+
+        <div class="grid two">
+          <div>
+            <label>Age</label>
+            <input name="age" type="number" min="13" max="120" required value="${safe(S.demo.age)}" placeholder="25"/>
+          </div>
+          <div>
+            <label>Sex</label>
+            <select name="sex" required>
+              <option value="">Select</option>
+              ${["Female","Male","Intersex","Prefer not to say"].map(x => `<option ${S.demo.sex===x ? "selected" : ""}>${x}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>Location</label>
+          <input name="location" required value="${safe(S.demo.location)}" placeholder="Dehradun, India"/>
+        </div>
+
+        <div>
+          <label>Email</label>
+          <input name="email" type="email" required value="${safe(S.demo.email)}" placeholder="user@example.com"/>
+        </div>
+
+        <button class="btn">Save & Continue</button>
+      </form>
+    </section>
+  `;
+}
+
+function viewQuiz(){
+  if(!S.consent){
+    return `
+      <section class="card">
+        <h2>Consent required</h2>
+        <p>Please complete the consent screen first.</p>
+        <button class="btn" data-route="welcome">Go to consent</button>
+      </section>
+    `;
+  }
+
+  if(!demoComplete()){
+    return `
+      <section class="card">
+        <h2>Profile incomplete</h2>
+        <p>Name, age, sex, location, and email are mandatory before starting the questionnaire.</p>
+        <button class="btn" data-route="demographics">Complete profile</button>
+      </section>
+    `;
+  }
+
+  if(answeredCount() === 60 && S.idx >= 60){
+    return viewResults();
+  }
+
+  if(S.idx > 59) S.idx = 59;
+
+  const i = S.idx;
+  const q = Q[i];
+  const num = i + 1;
+  const done = answeredCount();
+  const selected = S.answers[i];
+
+  return `
+    <section class="card">
+      <div class="progress"><i style="width:${(done/60)*100}%"></i></div>
+
+      <div class="q-meta">
+        <div class="q-cat">${safe(categoryForQuestion(num))}</div>
+        <div class="sub">Question ${num} / 60 · ${done}/60 answered</div>
+      </div>
+
+      <h2>${safe(q[0])}</h2>
+      <p>Choose the option that best describes your natural tendency over most of your life.</p>
+
+      <div class="choice ${selected===0 ? "selected" : ""}" data-pick="0">
+        <span class="badge v">V</span>
+        <span>${safe(q[1])}</span>
+      </div>
+      <div class="choice ${selected===1 ? "selected" : ""}" data-pick="1">
+        <span class="badge p">P</span>
+        <span>${safe(q[2])}</span>
+      </div>
+      <div class="choice ${selected===2 ? "selected" : ""}" data-pick="2">
+        <span class="badge k">K</span>
+        <span>${safe(q[3])}</span>
+      </div>
+
+      <div class="navrow">
+        <button class="btn secondary" id="prevQ" ${i===0 ? "disabled" : ""}>Back</button>
+        <button class="btn" id="nextQ" ${selected===null ? "disabled" : ""}>${num===60 ? "See Results" : "Next"}</button>
+      </div>
+
+      <button class="btn secondary" id="saveExit">Save & Exit</button>
+      <p class="statusline">Progress auto-saved locally for demo save/resume.</p>
+    </section>
+  `;
+}
+
+function bar(label, value, color){
+  return `
+    <div class="barwrap">
+      <div class="barlabel">
+        <span>${label}</span>
+        <span>${value}%</span>
+      </div>
+      <div class="bar">
+        <i style="width:${value}%;background:${color}"></i>
+      </div>
+    </div>
+  `;
+}
+
+function viewResults(){
+  if(!demoComplete()){
+    return `
+      <section class="card">
+        <h2>Profile required</h2>
+        <p>Please complete your demographic and contact details first.</p>
+        <button class="btn" data-route="demographics">Complete profile</button>
+      </section>
+    `;
+  }
+
+  if(answeredCount() < 60){
+    return `
+      <section class="card">
+        <h2>Assessment not complete</h2>
+        <p>You have answered ${answeredCount()} of 60 questions.</p>
+        <button class="btn" data-route="quiz">Continue assessment</button>
+      </section>
+    `;
+  }
+
+  const a = S.assessment || buildAssessment();
+  const top = a.dominant.split("-")[0];
+  const confidencePct = Math.round(a.confidence * 100);
+
+  return `
+    <section class="card">
+      <h1>Your Prakriti Result</h1>
+      <p>${safe(a.name)}, your calculated constitution is:</p>
+
+      <div style="text-align:center;margin:16px 0">
+        <div class="pill">${safe(a.dominant)}</div>
+        <p>Confidence score: <b style="color:var(--ink)">${confidencePct}%</b></p>
+      </div>
+
+      ${bar("Vata", a.scores.vata, "var(--vata)")}
+      ${bar("Pitta", a.scores.pitta, "var(--pitta)")}
+      ${bar("Kapha", a.scores.kapha, "var(--kapha)")}
+
+      <p class="statusline">
+        Assessment ID: ${safe(a.assessmentId)}<br/>
+        Result PDF email: <span class="success">sent to ${safe(a.email)} demo</span>
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Three actionable tips for ${safe(top)}</h2>
+      ${TIPS[top].map((t,i) => `
+        <div class="tip">
+          <div class="num">${i+1}</div>
+          <p style="color:var(--ink);margin:0">${safe(t)}</p>
+        </div>
+      `).join("")}
+    </section>
+
+    <section class="card">
+      <h2>Summary actions</h2>
+      <button class="btn" id="pdfBtn">Generate PDF Summary</button>
+      <button class="btn secondary" id="emailBtn">Resend Result to Email</button>
+      <button class="btn secondary" id="shareBtn">Copy Shareable Demo Link</button>
+      <button class="btn secondary" id="retakeBtn">Retake Assessment</button>
+    </section>
+  `;
+}
+
+function viewPractitioners(){
+  return `
+    <section class="card">
+      <h1>Practitioner Directory</h1>
+      <p>Mock verified Ayurvedic practitioners available for result review.</p>
+
+      ${PRACTITIONERS.map(p => `
+        <div class="person">
+          <div class="avatar">${safe(p.name.split(" ")[1]?.[0] || "D")}</div>
+          <div style="flex:1">
+            <b>${safe(p.name)}</b>
+            <p style="margin:2px 0">${safe(p.clinic)} · ${safe(p.location)}</p>
+            <div class="sub">${safe(p.credential)}</div>
+            <div class="${p.verified ? "verified" : "pending"}">${p.verified ? "✔ Verified practitioner" : "Pending verification"}</div>
+          </div>
+          <button class="btn small secondary" data-contact="${safe(p.email)}">Contact</button>
+        </div>
+      `).join("")}
+    </section>
+  `;
+}
+
+function viewAdmin(){
+  return `
+    <section class="card">
+      <h1>Admin Dashboard</h1>
+      <p>Anonymized demo analytics for HR or clinical pilot review.</p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="num">50</div>
+          <div class="txt">Invited users</div>
+        </div>
+        <div class="kpi">
+          <div class="num">39</div>
+          <div class="txt">Completed</div>
+        </div>
+        <div class="kpi">
+          <div class="num">78%</div>
+          <div class="txt">Completion rate</div>
+        </div>
+        <div class="kpi">
+          <div class="num">&lt;2s</div>
+          <div class="txt">Questionnaire load</div>
+        </div>
+        <div class="kpi">
+          <div class="num">&lt;1s</div>
+          <div class="txt">Result generation</div>
+        </div>
+        <div class="kpi">
+          <div class="num">5m 42s</div>
+          <div class="txt">Avg completion time</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Anonymized Dosha Distribution</h2>
+      ${bar("Vata-dominant", 34, "var(--vata)")}
+      ${bar("Pitta-dominant", 40, "var(--pitta)")}
+      ${bar("Kapha-dominant", 26, "var(--kapha)")}
+    </section>
+
+    <section class="card">
+      <h2>Clinician Concordance Test</h2>
+      <p>Mock comparison of app result vs practitioner label for 30 consented demo users.</p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="num">30</div>
+          <div class="txt">Reviewed users</div>
+        </div>
+        <div class="kpi">
+          <div class="num">27/30</div>
+          <div class="txt">Exact matches</div>
+        </div>
+        <div class="kpi">
+          <div class="num">90%</div>
+          <div class="txt">Concordance</div>
+        </div>
+      </div>
+
+      <p class="statusline">Cohen’s κ ≈ 0.78, interpreted as substantial agreement in this mock panel.</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>App label</th>
+            <th>Practitioner label</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>U-001</td><td>Vata-Pitta</td><td>Vata-Pitta</td><td class="success">Match</td></tr>
+          <tr><td>U-002</td><td>Pitta-Kapha</td><td>Pitta-Kapha</td><td class="success">Match</td></tr>
+          <tr><td>U-003</td><td>Kapha-Pitta</td><td>Kapha</td><td class="warn">Review</td></tr>
+          <tr><td>U-004</td><td>Vata</td><td>Vata</td><td class="success">Match</td></tr>
+          <tr><td>U-005</td><td>Pitta-Vata</td><td>Vata-Pitta</td><td class="warn">Adjacent</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Practitioner Verification View</h2>
+      <p>Mock credential review queue for directory governance.</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Credential</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dr. Anaya Rao</td>
+            <td>BAMS · Reg verified</td>
+            <td class="success">Verified</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Dr. Kabir Menon</td>
+            <td>BAMS, MD · Reg verified</td>
+            <td class="success">Verified</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Dr. Meera Shah</td>
+            <td>BAMS · License pending</td>
+            <td class="warn">Pending</td>
+            <td><button class="btn small secondary" data-approve>Approve</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  `;
+}
+
+function viewApi(){
+  return `
+    <section class="card">
+      <h1>API Key Management</h1>
+      <p>Sandbox API controls for HR and clinical integration demos.</p>
+
+      <label>Sandbox API Key</label>
+      <input id="apiKey" readonly value="${safe(localStorage.getItem("vapik_api_key") || "sk_sandbox_vapik_demo_xxxxxxxxxxxx")}"/>
+
+      <button class="btn" id="newKeyBtn">Generate New Sandbox Key</button>
+    </section>
+
+    <section class="card">
+      <h2>Webhook Test</h2>
+      <label>Webhook URL</label>
+      <input id="webhookUrl" value="https://partner.example.com/webhooks/vapik"/>
+      <button class="btn" id="testWebhookBtn">Send Test Webhook</button>
+      <p class="statusline">Demo event: <code>assessment.completed</code></p>
+    </section>
+
+    <section class="card">
+      <h2>Endpoint Summary</h2>
+      <div class="code">POST /consent
+POST /assessments
+GET  /assessments/{id}
+GET  /questionnaire
+GET  /practitioners
+
+Auth:
+- x-api-key for partners
+- Bearer JWT for users
+
+Email:
+- PDF summary is sent to the provided email after assessment completion.</div>
+    </section>
+  `;
+}
+
+/* ---------------- PDF + Email Mock ---------------- */
+function pdfHTML(a){
+  return `
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>VAPIK Result Summary</title>
+<style>
+body{font-family:Arial,sans-serif;color:#172033;padding:28px}
+h1{margin-bottom:4px}
+.muted{color:#667085}
+.card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:14px 0}
+.row{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:8px 0}
+.row:last-child{border-bottom:0}
+.badge{display:inline-block;padding:8px 14px;background:#172033;color:white;border-radius:999px;font-weight:bold}
+</style>
+</head>
+<body>
+  <h1>VAPIK Prakriti Result Summary</h1>
+  <p class="muted">Generated ${safe(new Date(a.timestamp).toLocaleString())}</p>
+
+  <div class="card">
+    <p><b>Name:</b> ${safe(a.name)}</p>
+    <p><b>Age:</b> ${safe(a.age)}</p>
+    <p><b>Sex:</b> ${safe(a.sex)}</p>
+    <p><b>Location:</b> ${safe(a.location)}</p>
+    <p><b>Email:</b> ${safe(a.email)}</p>
+  </div>
+
+  <div class="card">
+    <h2>Your constitution</h2>
+    <p><span class="badge">${safe(a.dominant)}</span></p>
+    <div class="row"><b>Vata</b><span>${safe(a.scores.vata)}%</span></div>
+    <div class="row"><b>Pitta</b><span>${safe(a.scores.pitta)}%</span></div>
+    <div class="row"><b>Kapha</b><span>${safe(a.scores.kapha)}%</span></div>
+    <div class="row"><b>Confidence</b><span>${Math.round(a.confidence*100)}%</span></div>
+  </div>
+
+  <div class="card">
+    <h2>Recommended tips</h2>
+    <ol>
+      ${TIPS[a.dominant.split("-")[0]].map(t => `<li>${safe(t)}</li>`).join("")}
+    </ol>
+  </div>
+
+  <p class="muted">This assessment is for wellness education and is not a medical diagnosis.</p>
+</body>
+</html>`;
+}
+
+function generatePDF(){
+  const a = S.assessment || buildAssessment();
+  const w = window.open("", "_blank");
+  w.document.write(pdfHTML(a));
+  w.document.close();
+  setTimeout(() => w.print(), 300);
+}
+
+function sendEmail(){
+  const a = S.assessment || buildAssessment();
+  a.emailDelivery = {
+    status:"sent-demo",
+    to:a.email,
+    provider:"mock-email",
+    sentAt:new Date().toISOString()
+  };
+  S.assessment = a;
+  save();
+  upsertAssessment(a);
+  alert(`Demo email sent to ${a.email}\n\nAttached: VAPIK-result-summary.pdf`);
+}
+
+/* ---------------- Router + Binding ---------------- */
+function render(){
+  headerStatus.textContent = S.consent ? `${answeredCount()}/60 answered` : "Consent required";
+
+  const views = {
+    welcome:viewWelcome,
+    demographics:viewDemographics,
+    quiz:viewQuiz,
+    results:viewResults,
+    practitioners:viewPractitioners,
+    admin:viewAdmin,
+    api:viewApi
+  };
+
+  root.innerHTML = views[current]();
+
+  document.querySelectorAll(".tabs button").forEach(b => {
+    b.classList.toggle("active", b.dataset.route === current);
+  });
+
+  bind();
+}
+
+function route(name){
+  current = name;
+  render();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function bind(){
+  document.querySelectorAll("[data-route]").forEach(el => {
+    el.onclick = () => route(el.dataset.route);
+  });
+
+  const consentBox = document.getElementById("consentBox");
+  if(consentBox){
+    consentBox.onchange = e => {
+      if(e.target.checked){
+        S.consent = {
+          consentId: uuid(),
+          userId: S.userId,
+          accepted: true,
+          version: "v1.0-demo",
+          text: "Consent to collect demographics, contact details, questionnaire answers, generate result, and email PDF summary.",
+          timestamp: new Date().toISOString()
+        };
+      }else{
+        S.consent = null;
+      }
+      save();
+      render();
+    };
+  }
+
+  const homeCta = document.getElementById("homeCta");
+  if(homeCta){
+    homeCta.onclick = () => {
+      if(!demoComplete()) route("demographics");
+      else route("quiz");
+    };
+  }
+
+  const demoForm = document.getElementById("demoForm");
+  if(demoForm){
+    demoForm.onsubmit = e => {
+      e.preventDefault();
+      const fd = new FormData(demoForm);
+      S.demo = {
+        name: fd.get("name").trim(),
+        age: fd.get("age"),
+        sex: fd.get("sex"),
+        location: fd.get("location").trim(),
+        email: fd.get("email").trim()
+      };
+      save();
+      route("quiz");
+    };
+  }
+
+  document.querySelectorAll("[data-pick]").forEach(el => {
+    el.onclick = () => {
+      S.answers[S.idx] = Number(el.dataset.pick);
+      S.assessment = null;
+      save();
+      render();
+    };
+  });
+
+  const prevQ = document.getElementById("prevQ");
+  if(prevQ){
+    prevQ.onclick = () => {
+      S.idx = Math.max(0, S.idx - 1);
+      save();
+      render();
+    };
+  }
+
+  const nextQ = document.getElementById("nextQ");
+  if(nextQ){
+    nextQ.onclick = () => {
+      if(S.idx < 59){
+        S.idx += 1;
+        save();
+        render();
+      }else{
+        if(answeredCount() === 60){
+          S.idx = 60;
+          buildAssessment();
+          route("results");
+        }else{
+          const firstMissing = S.answers.findIndex(a => a === null);
+          S.idx = firstMissing >= 0 ? firstMissing : 59;
+          save();
+          render();
+        }
+      }
+    };
+  }
+
+  const saveExit = document.getElementById("saveExit");
+  if(saveExit){
+    saveExit.onclick = () => {
+      save();
+      alert("Progress saved. You can resume anytime from this browser.");
+      route("welcome");
+    };
+  }
+
+  const pdfBtn = document.getElementById("pdfBtn");
+  if(pdfBtn) pdfBtn.onclick = generatePDF;
+
+  const emailBtn = document.getElementById("emailBtn");
+  if(emailBtn) emailBtn.onclick = sendEmail;
+
+  const shareBtn = document.getElementById("shareBtn");
+  if(shareBtn){
+    shareBtn.onclick = async () => {
+      const a = S.assessment || buildAssessment();
+      const link = location.origin + location.pathname + "#result=" + a.assessmentId;
+      if(navigator.clipboard) await navigator.clipboard.writeText(link);
+      alert("Shareable demo link copied:\n" + link);
+    };
+  }
+
+  const retakeBtn = document.getElementById("retakeBtn");
+  if(retakeBtn){
+    retakeBtn.onclick = () => {
+      if(confirm("Retake the questionnaire? Your profile and consent will remain saved.")){
+        S.answers = Array(60).fill(null);
+        S.idx = 0;
+        S.assessment = null;
+        save();
+        route("quiz");
+      }
+    };
+  }
+
+  document.querySelectorAll("[data-contact]").forEach(btn => {
+    btn.onclick = () => {
+      alert(`Opening contact action for ${btn.dataset.contact}\n\nDemo: practitioner contact request created.`);
+    };
+  });
+
+  document.querySelectorAll("[data-approve]").forEach(btn => {
+    btn.onclick = () => alert("Demo approval complete. Practitioner verification status updated.");
+  });
+
+  const newKeyBtn = document.getElementById("newKeyBtn");
+  if(newKeyBtn){
+    newKeyBtn.onclick = () => {
+      const key = "sk_sandbox_vapik_" + Math.random().toString(36).slice(2,18);
+      localStorage.setItem("vapik_api_key", key);
+      document.getElementById("apiKey").value = key;
+      alert("New sandbox API key generated.");
+    };
+  }
+
+  const testWebhookBtn = document.getElementById("testWebhookBtn");
+  if(testWebhookBtn){
+    testWebhookBtn.onclick = () => {
+      const url = document.getElementById("webhookUrl").value;
+      alert(`POST ${url}\n\n200 OK\n\n{"event":"assessment.completed","assessmentId":"demo-assessment-id"}`);
+    };
+  }
+}
+
+document.querySelectorAll(".tabs button").forEach(b => {
+  b.onclick = () => route(b.dataset.route);
+});
+
+render();
+</script>
+</body>
+</html>
